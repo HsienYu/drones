@@ -24,7 +24,7 @@ fs.readdir('./assets/clips/', (err, items) => {
                     if (err) return cb2(err);
                     getVideoDurationInSeconds(filePath).then((duration) => {
                         var fileInfo = {
-                            dir: dir, content: { filename: file, duration: duration }
+                            dir: dir, content: { filename: file, duration: duration, tag: 0 }
                         };
                         console.log('fileInfo', fileInfo);
                         dict.push(fileInfo);

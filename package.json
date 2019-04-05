@@ -18,6 +18,7 @@
   "homepage": "https://github.com/HsienYu/HCW#readme",
   "dependencies": {
     "async": "^2.6.2",
-    "get-video-duration": "^1.0.3"
+    "get-video-duration": "^1.0.3",
+    "lodash": "^4.17.11"
   }
 }
