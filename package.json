@@ -1,0 +1,23 @@
+{
+  "name": "hcw",
+  "version": "1.0.0",
+  "description": "HCW",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HsienYu/HCW.git"
+  },
+  "author": "chenghsienyu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HsienYu/HCW/issues"
+  },
+  "homepage": "https://github.com/HsienYu/HCW#readme",
+  "dependencies": {
+    "async": "^2.6.2",
+    "get-video-duration": "^1.0.3"
+  }
+}
