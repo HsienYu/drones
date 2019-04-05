@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="./node_modules/videocontext/dist/videocontext.js"></script>
+    <title>Hello World!</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="1280" height="720" style="width: 852px; height: 480px"></canvas>
+</body>
+
+<script>
+    //Setup the video context.
+    var canvas = document.getElementById("canvas");
+    var ctx = new VideoContext(canvas);
+
+    //Create a video node and play it for 60 seconds.
+    var videoNode = ctx.video('./assets/clips/bats/other001.mp4');
+    videoNode.start(0);
+    videoNode.stop(60);
+
+    //start playback.
+    ctx.play();
+
+
+
+</script>
+
+</html>
