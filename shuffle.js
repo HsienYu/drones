@@ -4,12 +4,19 @@ const fs = require('fs');
 const _ = require('lodash');
 
 
-
+const Subs = require('./sub.json');
 const Clips = require('./list.json');
 
 const MAX_PLAYLIST = 4;
 
-let totalDuration = 450;
+let sub = _.sample(Subs);
+//console.log(sub.dir.includes("/en"));
+//console.log(sub.dir.includes("/zh"));
+
+let totalDuration = Math.round(sub.content.duration);
+
+//console.log(sub);
+//console.log(totalDuration);
 
 function mapping(f, key) {
     return {
@@ -49,52 +56,54 @@ function generatePickFiles(pickedIds, ignoreTag) {
     return _.shuffle(files);
 }
 
-let pickFiles = generatePickFiles();
-// check remaining files and remaining total duration
-// if not enough reset all tag to 0 and add all file to remainingFiles
-// console.log(pickFiles.length);
-if (pickFiles.length == 0) {
-    _.each(Clips, function (c) {
-        c.content.tag = 0;
-    });
+module.exports = function () {
 
-    pickFiles = generatePickFiles();
+    let pickFiles = generatePickFiles();
+    // check remaining files and remaining total duration
+    // if not enough reset all tag to 0 and add all file to remainingFiles
+    //console.log(pickFiles.length);
+
     if (pickFiles.length == 0) {
-        console.error('Can not find any files');
-        return;
-    }
-}
+        _.each(Clips, function (c) {
+            c.content.tag = 0;
+        });
 
-let playlists = [];
-let ids = [];
-
-for (let index = 0; index < MAX_PLAYLIST; index++) {
-    let playlist = [];
-    let remainTime = totalDuration;
-    while (remainTime > 0) {
-        let clip = pickFiles.pop();
-        if (!clip) {
-            // re-create pickFiles
-            pickFiles = generatePickFiles(ids, true);
-            continue;
+        pickFiles = generatePickFiles();
+        if (pickFiles.length == 0) {
+            console.error('Can not find any files');
+            return;
         }
-        //console.log(clip);
-
-        playlist.push(clip);
-        ids.push(clip.id);
-        // modify clip
-        Clips[clip.id].content.tag = 1;
-
-        remainTime -= Math.round(clip.duration);
     }
 
-    playlists[index] = playlist;
+    let playlists = [];
+    let ids = [];
+
+    for (let index = 0; index < MAX_PLAYLIST; index++) {
+        let playlist = [];
+        let remainTime = totalDuration;
+        while (remainTime > 0) {
+            let clip = pickFiles.pop();
+            if (!clip) {
+                // re-create pickFiles
+                pickFiles = generatePickFiles(ids, true);
+                continue;
+            }
+            //console.log(clip);
+
+            playlist.push(clip);
+            ids.push(clip.id);
+            // modify clip
+            Clips[clip.id].content.tag = 1;
+
+            remainTime -= Math.round(clip.duration);
+        }
+
+        playlists[index] = playlist;
+    }
+
+    fs.writeFileSync('list.json', JSON.stringify(Clips, null, 4));
+    var obj = _.map(playlists, mapToPlayList);
+    obj.push(sub);
+    //console.log(util.inspect(_.map(playlists, mapToPlayList), false, null, true /* enable colors */));
+    return obj
 }
-
-fs.writeFileSync('list.json', JSON.stringify(Clips, null, 4));
-
-console.log(util.inspect(_.map(playlists, mapToPlayList), false, null, true /* enable colors */));
-
-let final_list = _.map(playlists, mapToPlayList);
-
-module.exports.final_list;
